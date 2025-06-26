@@ -1,29 +1,34 @@
-/*
- * Copyright (C) 2024 The LineageOS Project
- * SPDX-License-Identifier: Apache-2.0
- */
-
 package com.oplus.content;
 
+import android.os.SystemProperties;
 import android.text.TextUtils;
 
 import java.util.List;
 
 public class OplusFeatureConfigManager {
-    public static OplusFeatureConfigManager sInstance = null;
+
+    public static OplusFeatureConfigManager sOplusFeatureConfigManager = null;
 
     public static OplusFeatureConfigManager getInstance() {
-        if (sInstance == null) {
-            sInstance = new OplusFeatureConfigManager();
+        if (sOplusFeatureConfigManager == null) {
+            sOplusFeatureConfigManager = new OplusFeatureConfigManager();
         }
-        return sInstance;
+        return sOplusFeatureConfigManager;
+    }
+
+    public boolean hasFeature(String name) {
+
+        if ("oplus.hardware.type.rear_IR".equals(name)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean useOnePlusBaseCamera() {
+        return !TextUtils.isEmpty(SystemProperties.get("ro.oplus.version.base"));
     }
 
     public interface OnFeatureObserver {
         default void onFeatureUpdate(List<String> features) {}
-    }
-
-    public boolean hasFeature(String name) {
-        return false;
     }
 }
